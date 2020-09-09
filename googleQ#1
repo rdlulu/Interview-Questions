@@ -1,0 +1,35 @@
+/*给一种编码方式： Hi -> 2Hi   hello -> 5hello, helloworld -> 5hello5world, 也就是变成一个数字，然后跟这个数字这么多字符在后面。那么下面的几个例子就是编码不正确的：
+2hello, 5hello5world!, 109something。前两种是后面的字符个数不对，109something 是因为有两种解析方法：1） 1跟个0，9跟个something。2）10跟个"9something”。
+问：给你一个编码后的字符串，请返回这个编码是否正确。*/
+
+import java.util.List;
+import java.util.Arrays;
+public class HelloWorld{
+    public boolean check(String s) {
+        if(s == null) return false;
+        if(s.length() == 0) return true;
+        if(s.charAt(0) <  '0' || s.charAt(0) > '9') return false;
+        boolean onlyOneValid = false;
+        int k = 0;
+        int val= 0;
+        while(k < s.length() && s.charAt(k) >= '0' && s.charAt(k) <= '9') {
+            int num = s.charAt(k) - '0';
+            val = val * 10 + num;
+            //System.out.println(val);
+            boolean validOrNot = (k + 1 +val == s.length()) || (check(s.substring(k + 1 + val, s.length())));
+            if(validOrNot) {
+                if(onlyOneValid) return false;
+                onlyOneValid =true;
+            }
+            k++;
+        }
+        return onlyOneValid;
+
+    }
+     public static void main(String []args){
+        HelloWorld  h = new HelloWorld();
+        List<String> ls = Arrays.asList("5hello","5hello!","5hello5world","5hello5world!","109something");
+        for(String s : ls) {
+            System.out.println(h.check(s));
+        }
+     }
